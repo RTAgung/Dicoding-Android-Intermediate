@@ -1,33 +1,71 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/activity_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="16dp"
     tools:context=".MainActivity">
 
-    <TextView
+    <Button
+        android:id="@+id/btn_pause"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/text_mediaplayer" />
+        android:layout_margin="8dp"
+        android:enabled="false"
+        android:text="Pause"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/btn_play"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-    <LinearLayout
+    <Button
+        android:id="@+id/btn_play"
+        android:layout_width="88dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:enabled="false"
+        android:text="Play"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/btn_stop"
+        app:layout_constraintStart_toEndOf="@+id/btn_pause"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/btn_stop"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:layout_margin="8dp"
+        android:enabled="false"
+        android:text="Stop"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/btn_play"
+        app:layout_constraintTop_toTopOf="parent" />
 
-        <Button
-            android:id="@+id/btn_play"
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="24dp"
+        app:layout_constraintBottom_toTopOf="@+id/btn_play"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/tv_due"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/btn_text_play" />
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true" />
 
-        <Button
-            android:id="@+id/btn_stop"
-            android:layout_width="wrap_content"
+        <SeekBar
+            android:id="@+id/seek_bar"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/btn_text_stop" />
-    </LinearLayout>
-</LinearLayout>
+            android:layout_below="@id/tv_due"
+            android:indeterminate="false"
+            android:progressDrawable="@drawable/custom_seekbar_view"
+            android:saveEnabled="false"
+            android:thumb="@android:color/transparent" />
+    </RelativeLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,60 +1,174 @@
 package com.example.mymediaplayer
 
-import android.media.AudioAttributes
-import android.media.MediaPlayer
-import androidx.appcompat.app.AppCompatActivity
+import android.app.Service
+import android.content.ComponentName
+import android.content.Context
+import android.content.Intent
+import android.content.ServiceConnection
+import android.content.pm.PackageManager
 import android.os.Bundle
-import android.widget.Button
-import java.io.IOException
+import android.os.Handler
+import android.os.IBinder
+import android.os.Looper
+import android.util.Log
+import android.widget.SeekBar
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
+import com.example.mymediaplayer.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
-    private var mMediaPlayer: MediaPlayer? = null
+
+    private lateinit var binding: ActivityMainBinding
+
+    private val seekbarProgressCycle = 200
+
+    private var boundStatus = false
+    private lateinit var player: MusicService
+
     private var isReady: Boolean = false
+    private var runnable: Runnable? = null
+    private var handler: Handler = Handler(Looper.getMainLooper())
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-
-        init()
-
-        val btnPlay = findViewById<Button>(R.id.btn_play)
-        val btnStop = findViewById<Button>(R.id.btn_stop)
-        btnPlay.setOnClickListener {
-            if (!isReady) {
-                mMediaPlayer?.prepareAsync()
-            } else {
-                if (mMediaPlayer?.isPlaying as Boolean) {
-                    mMediaPlayer?.pause()
-                } else {
-                    mMediaPlayer?.start()
-                }
-            }
+    private val connection = object : ServiceConnection {
+        override fun onServiceDisconnected(name: ComponentName) {
+            boundStatus = false
         }
-        btnStop.setOnClickListener {
-            if (mMediaPlayer?.isPlaying as Boolean || isReady) {
-                mMediaPlayer?.stop()
-                isReady = false
-            }
+
+        override fun onServiceConnected(name: ComponentName, service: IBinder) {
+            val myBinder = service as MusicService.LocalBinder
+            player = myBinder.getService
+            boundStatus = true
+
+            getServiceData()
         }
     }
 
-    private fun init() {
-        mMediaPlayer = MediaPlayer()
-        val attribute = AudioAttributes.Builder()
-            .setUsage(AudioAttributes.USAGE_MEDIA)
-            .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
-            .build()
-        mMediaPlayer?.setAudioAttributes(attribute)
-        val afd = applicationContext.resources.openRawResourceFd(R.raw.yoasobi)
-        try {
-            mMediaPlayer?.setDataSource(afd.fileDescriptor, afd.startOffset, afd.length)
-        } catch (e: IOException) {
-            e.printStackTrace()
+    private fun getServiceData() {
+        player.isReady.observe(this) {
+            isReady = it
+            if (isReady) {
+                val sec = (player.mediaPlayer?.duration ?: 0) / 1000
+                val min = sec / 60
+                binding.seekBar.max = (sec * 1000) / seekbarProgressCycle
+                binding.tvDue.text =
+                    "${String.format("%02d", min)}:${String.format("%02d", sec % 60)}"
+                binding.seekBar.setOnSeekBarChangeListener(object :
+                    SeekBar.OnSeekBarChangeListener {
+                    override fun onProgressChanged(seekBar: SeekBar, i: Int, b: Boolean) {
+                        if (b) player.seekMedia(i * seekbarProgressCycle)
+                    }
+
+                    override fun onStartTrackingTouch(seekBar: SeekBar) {
+                    }
+
+                    override fun onStopTrackingTouch(seekBar: SeekBar) {
+                    }
+                })
+
+                initSeekBar()
+            } else {
+                if (runnable != null) handler.removeCallbacks(runnable!!)
+            }
         }
-        mMediaPlayer?.setOnPreparedListener {
-            isReady = true
-            mMediaPlayer?.start()
+        player.isPlaying.observe(this) {
+            changeButtonState(it)
         }
-        mMediaPlayer?.setOnErrorListener { _, _, _ -> false }
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
+        val permission = android.Manifest.permission.POST_NOTIFICATIONS
+        val requestCode = 1
+
+        ActivityCompat.requestPermissions(this, arrayOf(permission), requestCode)
+
+        initMediaService()
+
+        binding.btnPlay.setOnClickListener {
+            if (isReady) {
+                player.playOrPauseMedia()
+            }
+        }
+        binding.btnPause.setOnClickListener {
+            if (isReady) {
+                player.playOrPauseMedia()
+            }
+        }
+        binding.btnStop.setOnClickListener {
+            player.stopMedia()
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        if (boundStatus) {
+            unbindService(connection)
+            boundStatus = false
+            player.stopForeground(Service.STOP_FOREGROUND_DETACH)
+            player.stopSelf()
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if (runnable != null) handler.removeCallbacks(runnable!!)
+        if (isReady) {
+            initSeekBar()
+        }
+    }
+
+    override fun onStop() {
+        super.onStop()
+        if (runnable != null) handler.removeCallbacks(runnable!!)
+    }
+
+    private fun changeButtonState(isPlaying: Boolean) {
+        if (isPlaying) {
+            binding.btnPlay.isEnabled = false
+            binding.btnPause.isEnabled = true
+            binding.btnStop.isEnabled = true
+        } else {
+            binding.btnPlay.isEnabled = true
+            binding.btnPause.isEnabled = false
+            binding.btnStop.isEnabled = false
+        }
+    }
+
+    private fun initMediaService() {
+        val mediaIntent = Intent(this, MusicService::class.java)
+        mediaIntent.putExtra(MusicService.EXTRA_MEDIA, R.raw.yoasobi)
+        startService(mediaIntent)
+        bindService(mediaIntent, connection, Context.BIND_AUTO_CREATE)
+    }
+
+    private fun initSeekBar() {
+        runnable = Runnable {
+            Log.d("TAG", "initSeekBar: ${player.mediaPlayer?.currentPosition}")
+            binding.seekBar.progress =
+                (player.mediaPlayer?.currentPosition ?: 0) / seekbarProgressCycle
+            if (runnable != null) handler.postDelayed(
+                runnable!!, (seekbarProgressCycle / 2).toLong()
+            )
+        }
+        if (runnable != null) handler.postDelayed(runnable!!, (seekbarProgressCycle / 2).toLong())
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == 1 && grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            // Permission granted, you can show notifications
+        } else {
+            val permission = android.Manifest.permission.POST_NOTIFICATIONS
+            val requestCode = 1
+
+            ActivityCompat.requestPermissions(this, arrayOf(permission), requestCode)
+        }
     }
 }
