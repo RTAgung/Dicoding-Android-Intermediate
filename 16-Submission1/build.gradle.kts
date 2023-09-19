@@ -4,15 +4,8 @@ plugins {
     id("org.jetbrains.kotlin.android") version "1.8.0" apply false
 }
 
-buildscript {
-    dependencies {
-        classpath("com.google.dagger:hilt-android-gradle-plugin:2.44")
-        classpath("androidx.navigation:navigation-safe-args-gradle-plugin:2.7.2")
-    }
-}
-
 // Core
-val coreVersion by extra { "1.12.0" }
+val coreVersion by extra { "1.10.0" }
 val appcompatVersion by extra { "1.6.1" }
 val lifecycleVersion by extra { "2.6.2" }
 val activityVersion by extra { "1.7.2" }
@@ -32,7 +25,7 @@ val constraintlayoutVersion by extra { "2.1.4" }
 val glideVersion by extra { "4.15.1" }
 
 // Navigation
-val navigationVersion by extra { "2.7.2" }
+val navigationVersion by extra { "2.6.0" }
 
 // API
 val retrofit2Version by extra { "2.9.0" }
