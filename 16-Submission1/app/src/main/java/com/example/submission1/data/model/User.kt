@@ -1,4 +1,11 @@
 package com.example.submission1.data.model
 
-class User {
-}
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
+
+@Parcelize
+data class User(
+    val userId: String,
+    val name: String,
+    val token: String
+) : Parcelable

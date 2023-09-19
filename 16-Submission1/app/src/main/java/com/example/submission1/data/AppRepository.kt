@@ -7,6 +7,8 @@ class AppRepository private constructor(
     private val apiService: ApiService,
     private val appPreferences: AppPreferences
 ) {
+
+
     companion object {
         @Volatile
         private var instance: AppRepository? = null
