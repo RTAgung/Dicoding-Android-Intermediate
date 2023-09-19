@@ -80,6 +80,8 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        binding.seekBar.layout(0,0,0,0)
+
         val permission = android.Manifest.permission.POST_NOTIFICATIONS
         val requestCode = 1
 

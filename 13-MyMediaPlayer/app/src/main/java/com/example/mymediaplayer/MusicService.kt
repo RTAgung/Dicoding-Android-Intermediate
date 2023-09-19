@@ -20,6 +20,7 @@ import android.support.v4.media.session.PlaybackStateCompat
 import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Transformations
 import androidx.media.session.MediaButtonReceiver
 import java.io.IOException
 
@@ -37,7 +38,6 @@ class MusicService : Service(), MediaPlayer.OnPreparedListener,
 
     private var notificationManager: NotificationManager? = null
     private var mediaSession: MediaSessionCompat? = null
-    private var stateBuilder: PlaybackStateCompat.Builder? = null
     private var notification: Notification? = null
 
     var mediaPlayer: MediaPlayer? = null
@@ -84,7 +84,6 @@ class MusicService : Service(), MediaPlayer.OnPreparedListener,
 
         mediaSession = MediaSessionCompat(this, "SOME_TAG", mediaButtonReceiver, null).also {
             it.setMetadata(getMetadata())
-            it.setFlags(MediaSessionCompat.FLAG_HANDLES_MEDIA_BUTTONS or MediaSessionCompat.FLAG_HANDLES_TRANSPORT_CONTROLS)
             it.setCallback(object : MediaSessionCompat.Callback() {
                 override fun onPlay() {
                     Log.d(TAG, "onPlay: initMediaSession()")
