@@ -1,6 +1,8 @@
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
+    id("kotlin-parcelize")
+    id("androidx.navigation.safeargs")
 }
 
 android {
@@ -33,15 +35,57 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
     }
+    viewBinding {
+        enable = true
+    }
 }
 
 dependencies {
+    // Core
+    val coreVersion: String by rootProject.extra
+    val appcompatVersion: String by rootProject.extra
+    val lifecycleVersion: String by rootProject.extra
+    val activityVersion: String by rootProject.extra
+    val fragmentVersion: String by rootProject.extra
+    implementation("androidx.core:core-ktx:$coreVersion")
+    implementation("androidx.appcompat:appcompat:$appcompatVersion")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycleVersion")
+    implementation("androidx.lifecycle:lifecycle-livedata-ktx:$lifecycleVersion")
+    implementation("androidx.activity:activity-ktx:$activityVersion")
+    implementation("androidx.fragment:fragment-ktx:$fragmentVersion")
 
-    implementation("androidx.core:core-ktx:1.9.0")
-    implementation("androidx.appcompat:appcompat:1.6.1")
-    implementation("com.google.android.material:material:1.9.0")
-    implementation("androidx.constraintlayout:constraintlayout:2.1.4")
-    testImplementation("junit:junit:4.13.2")
-    androidTestImplementation("androidx.test.ext:junit:1.1.5")
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
+    // Testing
+    val junitVersion: String by rootProject.extra
+    val extVersion: String by rootProject.extra
+    val espressoVersion: String by rootProject.extra
+    testImplementation("junit:junit:$junitVersion")
+    androidTestImplementation("androidx.test.ext:junit:$extVersion")
+    androidTestImplementation("androidx.test.espresso:espresso-core:$espressoVersion")
+
+    // UI
+    val recyclerviewVersion: String by rootProject.extra
+    val materialVersion: String by rootProject.extra
+    val constraintlayoutVersion: String by rootProject.extra
+    implementation("androidx.recyclerview:recyclerview:$recyclerviewVersion")
+    implementation("com.google.android.material:material:$materialVersion")
+    implementation("androidx.constraintlayout:constraintlayout:$constraintlayoutVersion")
+
+    // Photo Online Loader
+    val glideVersion: String by rootProject.extra
+    implementation("com.github.bumptech.glide:glide:$glideVersion")
+
+    // Preferences DataStore
+    val datastoreVersion: String by rootProject.extra
+    implementation("androidx.datastore:datastore-preferences:$datastoreVersion")
+
+    // API
+    val retrofit2Version: String by rootProject.extra
+    val okhttp3Version: String by rootProject.extra
+    implementation("com.squareup.retrofit2:retrofit:$retrofit2Version")
+    implementation("com.squareup.retrofit2:converter-gson:$retrofit2Version")
+    implementation("com.squareup.okhttp3:logging-interceptor:$okhttp3Version")
+
+    // LottieFiles
+    val lottieVersion: String by rootProject.extra
+    implementation("com.airbnb.android:lottie:$lottieVersion")
 }
