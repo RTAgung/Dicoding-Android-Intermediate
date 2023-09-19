@@ -18,6 +18,7 @@ class MyEditText : TextInputEditText, View.OnTouchListener {
 
     private lateinit var actionButtonImage: Drawable
     private var isPasswordType = false
+    private var isEmailType = false
     private var isPasswordVisible = false
     var isValid = false
 
@@ -56,13 +57,17 @@ class MyEditText : TextInputEditText, View.OnTouchListener {
         if (isPasswordType) {
             isValid = s.length >= 8
             error = if (!isValid) context.getString(R.string.password_min8_message) else null
-        } else {
+        } else if (isEmailType) {
             isValid = android.util.Patterns.EMAIL_ADDRESS.matcher(s).matches()
             error = if (!isValid) context.getString(R.string.email_format_message) else null
+        } else {
+            isValid = true
         }
     }
 
     private fun setActionButtonImage() {
+        actionButtonImage =
+            ContextCompat.getDrawable(context, R.drawable.round_clear_24) as Drawable
         when ((inputType - 1)) {
             InputType.TYPE_TEXT_VARIATION_PASSWORD -> {
                 actionButtonImage = ContextCompat.getDrawable(
@@ -72,10 +77,8 @@ class MyEditText : TextInputEditText, View.OnTouchListener {
                 isPasswordType = true
             }
 
-            else -> {
-                actionButtonImage =
-                    ContextCompat.getDrawable(context, R.drawable.round_clear_24) as Drawable
-                isPasswordType = false
+            InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS -> {
+                isEmailType = true
             }
         }
     }

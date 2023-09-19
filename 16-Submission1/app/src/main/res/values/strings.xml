@@ -10,4 +10,6 @@
     <string name="register_button_text">REGISTER</string>
     <string name="password_min8_message">Minimal 8 characters</string>
     <string name="email_format_message">Incorrect format</string>
+    <string name="hint_name">Name</string>
+    <string name="register_text_message">Register to become an explorer here</string>
 </resources>
