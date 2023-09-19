@@ -74,6 +74,11 @@ dependencies {
     val glideVersion: String by rootProject.extra
     implementation("com.github.bumptech.glide:glide:$glideVersion")
 
+    // Navigation
+    val navigationVersion: String by rootProject.extra
+    implementation("androidx.navigation:navigation-fragment-ktx:$navigationVersion")
+    implementation("androidx.navigation:navigation-ui-ktx:$navigationVersion")
+
     // Preferences DataStore
     val datastoreVersion: String by rootProject.extra
     implementation("androidx.datastore:datastore-preferences:$datastoreVersion")

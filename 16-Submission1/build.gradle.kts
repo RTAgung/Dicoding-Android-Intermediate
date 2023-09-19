@@ -28,6 +28,12 @@ val recyclerviewVersion by extra { "1.3.1" }
 val materialVersion by extra { "1.9.0" }
 val constraintlayoutVersion by extra { "2.1.4" }
 
+// Photo Online Loader
+val glideVersion by extra { "4.15.1" }
+
+// Navigation
+val navigationVersion by extra { "2.7.2" }
+
 // API
 val retrofit2Version by extra { "2.9.0" }
 val okhttp3Version by extra { "4.9.0" }
@@ -37,6 +43,3 @@ val datastoreVersion by extra { "1.0.0" }
 
 // LottieFiles
 val lottieVersion by extra { "3.4.0" }
-
-// Photo Online Loader
-val glideVersion by extra { "4.15.1" }
