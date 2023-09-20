@@ -29,7 +29,7 @@ val navigationVersion by extra { "2.6.0" }
 
 // API
 val retrofit2Version by extra { "2.9.0" }
-val okhttp3Version by extra { "4.9.0" }
+val okhttp3Version by extra { "4.11.0" }
 
 // Preferences DataStore
 val datastoreVersion by extra { "1.0.0" }

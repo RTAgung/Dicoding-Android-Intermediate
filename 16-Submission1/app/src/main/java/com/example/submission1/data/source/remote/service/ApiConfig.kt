@@ -1,6 +1,5 @@
 package com.example.submission1.data.source.remote.service
 
-import com.airbnb.lottie.BuildConfig
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -11,11 +10,8 @@ class ApiConfig {
         private const val API_BASE_URL = "https://story-api.dicoding.dev/v1/"
 
         fun getApiService(): ApiService {
-            val loggingInterceptor = if (BuildConfig.DEBUG) {
+            val loggingInterceptor =
                 HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY)
-            } else {
-                HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.NONE)
-            }
             val client = OkHttpClient.Builder()
                 .addInterceptor(loggingInterceptor)
                 .build()

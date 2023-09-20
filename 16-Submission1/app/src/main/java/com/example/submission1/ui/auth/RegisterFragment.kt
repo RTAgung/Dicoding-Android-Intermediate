@@ -10,12 +10,18 @@ import android.view.animation.AccelerateDecelerateInterpolator
 import android.view.animation.AccelerateInterpolator
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import com.example.submission1.data.ResultState
 import com.example.submission1.databinding.FragmentRegisterBinding
+import com.example.submission1.ui.ViewModelFactory
+import com.google.android.material.snackbar.Snackbar
 
 class RegisterFragment : Fragment() {
     private var _binding: FragmentRegisterBinding? = null
     private val binding get() = _binding!!
+
+    private lateinit var viewModel: AuthViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -28,8 +34,15 @@ class RegisterFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        initViewModel()
         playAnimation()
         setView()
+    }
+
+    private fun initViewModel() {
+        val factory = ViewModelFactory.getInstance(requireActivity())
+        val initViewModel: AuthViewModel by viewModels { factory }
+        viewModel = initViewModel
     }
 
     private fun setView() {
@@ -40,7 +53,7 @@ class RegisterFragment : Fragment() {
             setButtonIsEnabled()
         }
         binding.btnRegister.setOnClickListener {
-            makeRegisterObserve()
+            if (binding.btnRegister.isEnabled) makeRegisterObserve()
         }
         binding.btnBack.setOnClickListener {
             findNavController().navigateUp()
@@ -48,7 +61,45 @@ class RegisterFragment : Fragment() {
     }
 
     private fun makeRegisterObserve() {
+        val name = binding.etName.text.toString()
+        val email = binding.etEmail.text.toString()
+        val password = binding.etPassword.text.toString()
+        viewModel.makeRegister(name, email, password).observe(viewLifecycleOwner) { result ->
+            if (result != null) {
+                when (result) {
+                    is ResultState.Loading -> {
+                        showLoading(true)
+                    }
 
+                    is ResultState.Success -> {
+                        showLoading(false)
+                        val isSuccess = result.data
+                        if (isSuccess) {
+                            findNavController().navigateUp()
+                            showSnackbar("Register success")
+                        } else {
+                            showSnackbar("Register failed")
+                        }
+                    }
+
+                    is ResultState.Error -> {
+                        showLoading(false)
+                        showSnackbar(result.error)
+                    }
+                }
+            }
+        }
+    }
+
+    private fun showLoading(isLoading: Boolean) {
+        if (isLoading)
+            binding.incLoading.loading.visibility = View.VISIBLE
+        else
+            binding.incLoading.loading.visibility = View.GONE
+    }
+
+    private fun showSnackbar(message: String) {
+        Snackbar.make(binding.root, message, Snackbar.LENGTH_LONG).show()
     }
 
     private fun setButtonIsEnabled() {

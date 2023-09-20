@@ -12,4 +12,6 @@
     <string name="email_format_message">Incorrect format</string>
     <string name="hint_name">Name</string>
     <string name="register_text_message">Register to become an explorer here</string>
+    <string name="loading_message">Wait a moment…</string>
+    <string name="loading_submessage">Take some coffee while waiting</string>
 </resources>

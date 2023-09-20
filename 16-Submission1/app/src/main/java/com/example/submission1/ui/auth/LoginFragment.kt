@@ -8,16 +8,21 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.view.animation.AccelerateInterpolator
+import android.widget.Toast
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.submission1.R
 import com.example.submission1.databinding.FragmentLoginBinding
+import com.example.submission1.ui.ViewModelFactory
 
 class LoginFragment : Fragment() {
 
     private var _binding: FragmentLoginBinding? = null
     private val binding get() = _binding!!
+
+    private lateinit var viewModel: AuthViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -30,8 +35,15 @@ class LoginFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        initViewModel()
         playAnimation()
         setView()
+    }
+
+    private fun initViewModel() {
+        val factory = ViewModelFactory.getInstance(requireActivity())
+        val initViewModel: AuthViewModel by viewModels { factory }
+        viewModel = initViewModel
     }
 
     private fun setView() {
