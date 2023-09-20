@@ -7,6 +7,7 @@ import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import com.example.submission1.data.model.User
+import com.example.submission1.utils.Constant
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
@@ -19,12 +20,15 @@ class AppPreferences private constructor(private val dataStore: DataStore<Prefer
         }
     }
 
-    fun getUserSession(): Flow<User> {
+    fun getUserSession(): Flow<User?> {
         return dataStore.data.map { preferences ->
             val userId: String = preferences[USER_ID_KEY] ?: ""
             val name: String = preferences[USER_NAME_KEY] ?: ""
             val token: String = preferences[USER_TOKEN_KEY] ?: ""
-            User(userId, name, token)
+            if (userId.isNotEmpty() || name.isNotEmpty() || token.isNotEmpty())
+                User(userId, name, token)
+            else
+                null
         }
     }
 
@@ -39,7 +43,7 @@ class AppPreferences private constructor(private val dataStore: DataStore<Prefer
         private val USER_NAME_KEY = stringPreferencesKey("user_name_key")
         private val USER_TOKEN_KEY = stringPreferencesKey("user_token_key")
 
-        private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "setting_datastore")
+        private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = Constant.DATASTORE_NAME)
 
         @Volatile
         private var INSTANCE: AppPreferences? = null

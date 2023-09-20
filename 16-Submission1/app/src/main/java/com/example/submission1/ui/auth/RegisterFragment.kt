@@ -12,6 +12,7 @@ import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import com.example.submission1.R
 import com.example.submission1.data.ResultState
 import com.example.submission1.databinding.FragmentRegisterBinding
 import com.example.submission1.ui.ViewModelFactory
@@ -76,9 +77,9 @@ class RegisterFragment : Fragment() {
                         val isSuccess = result.data
                         if (isSuccess) {
                             findNavController().navigateUp()
-                            showSnackbar("Register success")
+                            showSnackbar(getString(R.string.register_success_message))
                         } else {
-                            showSnackbar("Register failed")
+                            showSnackbar(getString(R.string.register_failed_message))
                         }
                     }
 

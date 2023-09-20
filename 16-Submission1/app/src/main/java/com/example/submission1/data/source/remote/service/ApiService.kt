@@ -4,8 +4,6 @@ import com.example.submission1.data.source.remote.response.DataResponse
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.http.Body
-import retrofit2.http.Field
-import retrofit2.http.FormUrlEncoded
 import retrofit2.http.GET
 import retrofit2.http.Multipart
 import retrofit2.http.POST
@@ -37,7 +35,7 @@ interface ApiService {
      *      - email: String
      *      - password: String
      */
-    @POST("/login")
+    @POST("login")
     suspend fun login(
         @Body requestBody: RequestBody
     ): DataResponse
@@ -57,7 +55,7 @@ interface ApiService {
      *      - lon: Float (optional)
      */
     @Multipart
-    @POST("/stories")
+    @POST("stories")
     suspend fun story(
         @Part file: MultipartBody.Part,
         @PartMap params: Map<String, RequestBody>,
@@ -75,7 +73,7 @@ interface ApiService {
      *      - page: Int (optional)
      *      - size: Int (optional)
      */
-    @GET("/stories")
+    @GET("stories")
     suspend fun story(
         @QueryMap params: Map<String, String>
     ): DataResponse
@@ -89,7 +87,7 @@ interface ApiService {
      * Data:
      * - id: Int
      */
-    @GET("/stories/{id}")
+    @GET("stories/{id}")
     suspend fun story(
         @Path("id") id: Int
     ): DataResponse

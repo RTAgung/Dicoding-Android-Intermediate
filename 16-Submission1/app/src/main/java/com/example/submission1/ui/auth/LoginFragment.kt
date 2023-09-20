@@ -8,14 +8,15 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.view.animation.AccelerateInterpolator
-import android.widget.Toast
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.submission1.R
+import com.example.submission1.data.ResultState
 import com.example.submission1.databinding.FragmentLoginBinding
 import com.example.submission1.ui.ViewModelFactory
+import com.google.android.material.snackbar.Snackbar
 
 class LoginFragment : Fragment() {
 
@@ -66,7 +67,44 @@ class LoginFragment : Fragment() {
     }
 
     private fun makeLoginObserve() {
-//        TODO("Not yet implemented")
+        val email = binding.etEmail.text.toString()
+        val password = binding.etPassword.text.toString()
+        viewModel.makeLogin(email, password).observe(viewLifecycleOwner) { result ->
+            if (result != null) {
+                when (result) {
+                    is ResultState.Loading -> {
+                        showLoading(true)
+                    }
+
+                    is ResultState.Success -> {
+                        val user = result.data
+                        if (user != null) {
+                            viewModel.saveUserSession(user)
+                            findNavController().navigate(R.id.action_loginFragment_to_homeFragment)
+                        } else {
+                            showLoading(false)
+                            showSnackbar(getString(R.string.login_failed_message))
+                        }
+                    }
+
+                    is ResultState.Error -> {
+                        showLoading(false)
+                        showSnackbar(result.error)
+                    }
+                }
+            }
+        }
+    }
+
+    private fun showLoading(isLoading: Boolean) {
+        if (isLoading)
+            binding.incLoading.loading.visibility = View.VISIBLE
+        else
+            binding.incLoading.loading.visibility = View.GONE
+    }
+
+    private fun showSnackbar(message: String) {
+        Snackbar.make(binding.root, message, Snackbar.LENGTH_LONG).show()
     }
 
     private fun setButtonIsEnabled() {

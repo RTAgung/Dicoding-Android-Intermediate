@@ -14,4 +14,7 @@
     <string name="register_text_message">Register to become an explorer here</string>
     <string name="loading_message">Wait a moment…</string>
     <string name="loading_submessage">Take some coffee while waiting</string>
+    <string name="register_success_message">Register success</string>
+    <string name="register_failed_message">Register failed</string>
+    <string name="login_failed_message">Login failed</string>
 </resources>

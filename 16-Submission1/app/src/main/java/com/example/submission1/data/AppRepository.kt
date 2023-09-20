@@ -1,7 +1,7 @@
 package com.example.submission1.data
 
-import android.util.Log
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.asLiveData
 import androidx.lifecycle.liveData
 import com.example.submission1.data.model.User
 import com.example.submission1.data.source.preferences.AppPreferences
@@ -24,7 +24,6 @@ class AppRepository private constructor(
             val isSuccess = !(dataResponse.error ?: true)
             emit(ResultState.Success(isSuccess))
         } catch (e: Exception) {
-            Log.d(TAG, "makeRegister: ${e.message.toString()}")
             emit(ResultState.Error(e.message.toString()))
         }
     }
@@ -32,18 +31,27 @@ class AppRepository private constructor(
     fun makeLogin(
         email: String,
         password: String
-    ): LiveData<ResultState<User>> = liveData {
+    ): LiveData<ResultState<User?>> = liveData {
         emit(ResultState.Loading)
         try {
-//            val requestBody = Mapping.createRegisterRequestBody(name, email, password)
-//            val dataResponse = apiService.login(requestBody)
-//            val isSuccess = !(dataResponse.error ?: true)
-//            emit(ResultState.Success(isSuccess))
+            val requestBody = Mapping.createLoginRequestBody(email, password)
+            val dataResponse = apiService.login(requestBody)
+            if (dataResponse.loginResult != null) {
+                val user = Mapping.loginResultToUser(dataResponse.loginResult)
+                emit(ResultState.Success(user))
+            } else {
+                emit(ResultState.Success(null))
+            }
         } catch (e: Exception) {
-            Log.d(TAG, "makeLogin: ${e.message.toString()}")
             emit(ResultState.Error(e.message.toString()))
         }
     }
+
+    suspend fun saveUserSession(user: User) {
+        appPreferences.saveUserSession(user)
+    }
+
+    fun getUserSession(): LiveData<User?> = appPreferences.getUserSession().asLiveData()
 
     companion object {
         val TAG = AppRepository::class.simpleName

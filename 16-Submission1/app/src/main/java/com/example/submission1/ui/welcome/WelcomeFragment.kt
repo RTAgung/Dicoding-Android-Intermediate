@@ -10,15 +10,19 @@ import android.view.ViewGroup
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.view.animation.AccelerateInterpolator
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.submission1.R
 import com.example.submission1.databinding.FragmentWelcomeBinding
+import com.example.submission1.ui.ViewModelFactory
+import com.example.submission1.utils.Constant
 
 class WelcomeFragment : Fragment() {
-    private val welcomeDuration = 5000L
 
     private var _binding: FragmentWelcomeBinding? = null
     private val binding get() = _binding!!
+
+    private lateinit var viewModel: WelcomeViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -31,11 +35,27 @@ class WelcomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        initViewModel()
         playAnimation()
 
         Handler(Looper.getMainLooper()).postDelayed({
-            findNavController().navigate(R.id.action_welcomeFragment_to_loginFragment)
-        }, welcomeDuration)
+            getSession()
+        }, Constant.WELCOME_PAGE_DURATION)
+    }
+
+    private fun getSession() {
+        viewModel.getUserSession().observe(viewLifecycleOwner) { user ->
+            if (user == null)
+                findNavController().navigate(R.id.action_welcomeFragment_to_loginFragment)
+            else
+                findNavController().navigate(R.id.action_welcomeFragment_to_homeFragment)
+        }
+    }
+
+    private fun initViewModel() {
+        val factory = ViewModelFactory.getInstance(requireActivity())
+        val initViewModel: WelcomeViewModel by viewModels { factory }
+        viewModel = initViewModel
     }
 
     private fun playAnimation() {
