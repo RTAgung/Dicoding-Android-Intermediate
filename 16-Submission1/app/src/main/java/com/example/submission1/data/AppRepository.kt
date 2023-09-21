@@ -3,9 +3,11 @@ package com.example.submission1.data
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.liveData
+import com.example.submission1.data.model.Story
 import com.example.submission1.data.model.User
 import com.example.submission1.data.source.preferences.AppPreferences
 import com.example.submission1.data.source.remote.service.ApiService
+import com.example.submission1.utils.Helper
 import com.example.submission1.utils.Mapping
 
 class AppRepository private constructor(
@@ -37,7 +39,7 @@ class AppRepository private constructor(
             val requestBody = Mapping.createLoginRequestBody(email, password)
             val dataResponse = apiService.login(requestBody)
             if (dataResponse.loginResult != null) {
-                val user = Mapping.loginResultToUser(dataResponse.loginResult)
+                val user = Mapping.loginResultResponseToUser(dataResponse.loginResult)
                 emit(ResultState.Success(user))
             } else {
                 emit(ResultState.Success(null))
@@ -53,9 +55,27 @@ class AppRepository private constructor(
 
     fun getUserSession(): LiveData<User?> = appPreferences.getUserSession().asLiveData()
 
-    companion object {
-        val TAG = AppRepository::class.simpleName
+    suspend fun clearUserSession() {
+        appPreferences.clearUserSession()
+    }
 
+    fun getStory(token: String): LiveData<ResultState<List<Story>>> = liveData {
+        emit(ResultState.Loading)
+        try {
+            val queryMap = Mapping.createStoryQueryMap()
+            val dataResponse = apiService.story(Helper.generateToken(token), queryMap)
+            if (dataResponse.error == false) {
+                val listStory = Mapping.storyResponseToStory(dataResponse.listStory)
+                emit(ResultState.Success(listStory))
+            } else {
+                emit(ResultState.Error(dataResponse.message ?: ""))
+            }
+        } catch (e: Exception) {
+            emit(ResultState.Error(e.message.toString()))
+        }
+    }
+
+    companion object {
         @Volatile
         private var instance: AppRepository? = null
 

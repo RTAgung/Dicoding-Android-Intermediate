@@ -8,13 +8,13 @@ import kotlinx.parcelize.Parcelize
 data class DataResponse(
 
     @field:SerializedName("listStory")
-    val listStory: List<Story?>? = null,
+    val listStory: List<StoryResponse?>? = null,
 
     @field:SerializedName("story")
-    val story: Story? = null,
+    val story: StoryResponse? = null,
 
     @field:SerializedName("loginResult")
-    val loginResult: LoginResult? = null,
+    val loginResult: LoginResultResponse? = null,
 
     @field:SerializedName("error")
     val error: Boolean? = null,
@@ -24,7 +24,7 @@ data class DataResponse(
 ) : Parcelable
 
 @Parcelize
-data class LoginResult(
+data class LoginResultResponse(
 
     @field:SerializedName("name")
     val name: String? = null,
@@ -37,7 +37,7 @@ data class LoginResult(
 ) : Parcelable
 
 @Parcelize
-data class Story(
+data class StoryResponse(
 
     @field:SerializedName("photoUrl")
     val photoUrl: String? = null,
@@ -52,11 +52,11 @@ data class Story(
     val description: String? = null,
 
     @field:SerializedName("lon")
-    val lon: Float? = null,
+    val lon: Double? = null,
 
     @field:SerializedName("id")
     val id: String? = null,
 
     @field:SerializedName("lat")
-    val lat: Float? = null
+    val lat: Double? = null
 ) : Parcelable

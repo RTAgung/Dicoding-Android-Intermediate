@@ -72,6 +72,7 @@ dependencies {
     // Photo Online Loader
     val glideVersion: String by rootProject.extra
     implementation("com.github.bumptech.glide:glide:$glideVersion")
+    annotationProcessor("com.github.bumptech.glide:compiler:$glideVersion")
 
     // Navigation
     val navigationVersion: String by rootProject.extra

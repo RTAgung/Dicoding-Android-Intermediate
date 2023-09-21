@@ -22,7 +22,7 @@ val materialVersion by extra { "1.9.0" }
 val constraintlayoutVersion by extra { "2.1.4" }
 
 // Photo Online Loader
-val glideVersion by extra { "4.15.1" }
+val glideVersion by extra { "4.16.0" }
 
 // Navigation
 val navigationVersion by extra { "2.6.0" }
