@@ -113,8 +113,7 @@ class HomeFragment : Fragment() {
             if (user != null) {
                 viewModel.user = user
                 viewModel.setReadyToLoadData(true)
-            }
-            else {
+            } else {
                 logoutProcess()
                 viewModel.setReadyToLoadData(false)
             }

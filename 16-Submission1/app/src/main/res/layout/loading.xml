@@ -54,7 +54,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:text="@string/loading_submessage"
+                android:text="@string/loading_sub_message"
                 android:textSize="16sp" />
         </LinearLayout>
     </androidx.cardview.widget.CardView>

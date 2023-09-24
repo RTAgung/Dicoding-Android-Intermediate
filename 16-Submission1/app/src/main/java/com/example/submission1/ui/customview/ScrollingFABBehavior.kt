@@ -35,7 +35,7 @@ class ScrollingFABBehavior(context: Context?, attrs: AttributeSet?) :
             val fabBottomMargin = lp.bottomMargin
             val distanceToScroll = fab.height + fabBottomMargin
             val ratio = dependency.getY() / toolbarHeight?.toFloat()!!
-            fab.translationY = distanceToScroll * (-ratio + 1)
+            fab.translationY = distanceToScroll * (-ratio + 0.5f)
         }
         return true
     }

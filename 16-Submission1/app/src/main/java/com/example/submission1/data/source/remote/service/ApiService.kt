@@ -57,6 +57,7 @@ interface ApiService {
      */
     @Multipart
     @POST("stories")
+    @JvmSuppressWildcards
     suspend fun story(
         @Header("Authorization") token: String,
         @Part file: MultipartBody.Part,

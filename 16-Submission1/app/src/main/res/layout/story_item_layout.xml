@@ -32,7 +32,8 @@
                 app:layout_constraintHeight_max="600dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                tools:src="@tools:sample/avatars" />
+                tools:src="@tools:sample/avatars"
+                android:contentDescription="@string/content_desc_story_photo" />
 
             <TextView
                 android:id="@+id/tv_user_name"

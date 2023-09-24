@@ -23,7 +23,8 @@
                 android:backgroundTint="?android:colorBackground"
                 android:src="@drawable/round_arrow_back_24"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                android:contentDescription="@string/content_desc_action_to_back_page" />
 
             <com.airbnb.lottie.LottieAnimationView
                 android:id="@+id/anim_register"

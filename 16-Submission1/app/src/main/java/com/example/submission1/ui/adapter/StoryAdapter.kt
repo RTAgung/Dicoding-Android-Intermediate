@@ -6,13 +6,14 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
 import com.example.submission1.R
 import com.example.submission1.data.model.Story
 import com.example.submission1.databinding.StoryItemLayoutBinding
+import com.example.submission1.utils.GlideApp
 import com.example.submission1.utils.Helper
 
-class StoryAdapter : ListAdapter<Story, StoryAdapter.ViewHolder>(DIFF_CALLBACK) {
+class StoryAdapter :
+    ListAdapter<Story, StoryAdapter.ViewHolder>(DIFF_CALLBACK) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding =
             StoryItemLayoutBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -34,13 +35,13 @@ class StoryAdapter : ListAdapter<Story, StoryAdapter.ViewHolder>(DIFF_CALLBACK) 
                 tvStoryDesc.setOnClickListener {
                     expandTextDescription()
                 }
-                Glide.with(itemView.context).load(storyItem.photoUrl)
-                    .placeholder(R.drawable.round_image_256).into(ivStoryPhoto)
+                GlideApp.with(itemView.context).load(storyItem.photoUrl)
+                    .placeholder(R.drawable.round_image_200).into(ivStoryPhoto)
                 tvUserName.text = storyItem.name
                 tvStoryDesc.text = storyItem.description
                 tvStoryDate.text =
                     Helper.generateExactDiffTime(itemView.context, storyItem.createdAt)
-                Helper.generateLocation(
+                Helper.Location.generateLocation(
                     itemView.context,
                     storyItem.lat,
                     storyItem.lon

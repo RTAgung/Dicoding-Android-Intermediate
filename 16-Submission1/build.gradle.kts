@@ -36,3 +36,6 @@ val datastoreVersion by extra { "1.0.0" }
 
 // LottieFiles
 val lottieVersion by extra { "3.4.0" }
+
+// Google Services Location
+val serviceLocationVersion by extra { "21.0.1" }

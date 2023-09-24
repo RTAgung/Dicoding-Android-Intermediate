@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Story</string>
+    <string name="login_text_message">Ayo masuk dulu untuk menjelajahi dunia barumu…</string>
+    <string name="hint_email">Email</string>
+    <string name="hint_password">Kata Sandi</string>
+    <string name="welcome_text_message">Selamat Datang di Perjalanan Kami</string>
+    <string name="login_button_text">MASUK</string>
+    <string name="register_button_text">DAFTAR</string>
+    <string name="password_min8_message">Minimal 8 karakter</string>
+    <string name="email_format_message">Format salah</string>
+    <string name="hint_name">Nama</string>
+    <string name="register_text_message">Daftar untuk menjadi penjelajah di sini</string>
+    <string name="loading_message">Tunggu sebentar…</string>
+    <string name="loading_sub_message">Minum kopi sambil menunggu</string>
+    <string name="register_success_message">Berhasil mendaftar</string>
+    <string name="register_failed_message">Gagal mendaftar</string>
+    <string name="login_failed_message">Gagal masuk</string>
+    <string name="no_available_data_message">Tidak ada data yang tersedia</string>
+    <string name="desc_more_text">lebih</string>
+    <string name="desc_less_text">kurang</string>
+    <plurals name="diff_time_seconds">
+        <item quantity="one">%1$d detik yang lalu</item>
+        <item quantity="other">%1$d detik yang lalu</item>
+    </plurals>
+    <plurals name="diff_time_minutes">
+        <item quantity="one">%1$d menit yang lalu</item>
+        <item quantity="other">%1$d menit yang lalu</item>
+    </plurals>
+    <plurals name="diff_time_hours">
+        <item quantity="one">%1$d jam yang lalu</item>
+        <item quantity="other">%1$d jam yang lalu</item>
+    </plurals>
+    <plurals name="diff_time_days">
+        <item quantity="one">%1$d hari yang lalu</item>
+        <item quantity="other">%1$d hari yang lalu</item>
+    </plurals>
+    <plurals name="diff_time_weeks">
+        <item quantity="one">%1$d minggu yang lalu</item>
+        <item quantity="other">%1$d minggu yang lalu</item>
+    </plurals>
+    <plurals name="diff_time_months">
+        <item quantity="one">%1$d bulan yang lalu</item>
+        <item quantity="other">%1$d bulan yang lalu</item>
+    </plurals>
+    <plurals name="diff_time_years">
+        <item quantity="one">%1$d tahun yang lalu</item>
+        <item quantity="other">%1$d tahun yang lalu</item>
+    </plurals>
+    <string name="logout_text">Keluar</string>
+    <string name="upload_button_text">UNGGAH</string>
+    <string name="camera_button_text">KAMERA</string>
+    <string name="gallery_button_text">GALERI</string>
+    <string name="hint_description">Deskripsi</string>
+    <string name="content_desc_story_photo">Foto story</string>
+    <string name="content_desc_action_to_back_page">Aksi ke halaman belakang</string>
+    <string name="add_story_text">Buat cerita kamu</string>
+    <string name="no_media_message">Tidak ada media yang dipilih</string>
+    <string name="permission_granted">Permintaan izin diterima</string>
+    <string name="permission_denied">Permintaan izin ditolak</string>
+    <string name="location_service_is_not_active">Layanan lokasi tidak aktif</string>
+    <string name="from_city_location_text">Dari %1$s</string>
+    <string name="content_desc_add_new_story">Tambah story baru</string>
+    <string name="upload_story_failed_message">Gagal unggah story</string>
+</resources>

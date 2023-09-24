@@ -2,6 +2,7 @@ plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     id("kotlin-parcelize")
+    id("kotlin-kapt")
 }
 
 android {
@@ -28,11 +29,11 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = "17"
     }
     viewBinding {
         enable = true
@@ -72,6 +73,7 @@ dependencies {
     // Photo Online Loader
     val glideVersion: String by rootProject.extra
     implementation("com.github.bumptech.glide:glide:$glideVersion")
+    kapt("com.github.bumptech.glide:compiler:$glideVersion")
     annotationProcessor("com.github.bumptech.glide:compiler:$glideVersion")
 
     // Navigation
@@ -93,4 +95,8 @@ dependencies {
     // LottieFiles
     val lottieVersion: String by rootProject.extra
     implementation("com.airbnb.android:lottie:$lottieVersion")
+
+    // Google Services Location
+    val serviceLocationVersion: String by rootProject.extra
+    implementation("com.google.android.gms:play-services-location:$serviceLocationVersion")
 }

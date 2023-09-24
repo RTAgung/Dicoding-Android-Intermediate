@@ -9,6 +9,8 @@ import com.example.submission1.data.source.preferences.AppPreferences
 import com.example.submission1.data.source.remote.service.ApiService
 import com.example.submission1.utils.Helper
 import com.example.submission1.utils.Mapping
+import retrofit2.HttpException
+import java.io.File
 
 class AppRepository private constructor(
     private val apiService: ApiService,
@@ -25,8 +27,9 @@ class AppRepository private constructor(
             val dataResponse = apiService.register(requestBody)
             val isSuccess = !(dataResponse.error ?: true)
             emit(ResultState.Success(isSuccess))
-        } catch (e: Exception) {
-            emit(ResultState.Error(e.message.toString()))
+        } catch (e: HttpException) {
+            val errorResponse = Mapping.getErrorApiResponse(e)
+            emit(ResultState.Error(errorResponse.message))
         }
     }
 
@@ -44,8 +47,9 @@ class AppRepository private constructor(
             } else {
                 emit(ResultState.Success(null))
             }
-        } catch (e: Exception) {
-            emit(ResultState.Error(e.message.toString()))
+        } catch (e: HttpException) {
+            val errorResponse = Mapping.getErrorApiResponse(e)
+            emit(ResultState.Error(errorResponse.message))
         }
     }
 
@@ -70,10 +74,29 @@ class AppRepository private constructor(
             } else {
                 emit(ResultState.Error(dataResponse.message ?: ""))
             }
-        } catch (e: Exception) {
-            emit(ResultState.Error(e.message.toString()))
+        } catch (e: HttpException) {
+            val errorResponse = Mapping.getErrorApiResponse(e)
+            emit(ResultState.Error(errorResponse.message))
         }
     }
+
+    fun uploadImage(token: String, imageFile: File, desc: String, lat: Double?, lon: Double?) =
+        liveData {
+            emit(ResultState.Loading)
+            try {
+                val dataResponse = apiService.story(
+                    Helper.generateToken(token),
+                    Mapping.createFileMultipartBody(imageFile),
+                    Mapping.createUploadMapRequestBody(desc, lat, lon)
+                )
+                val isSuccess = !(dataResponse.error ?: true)
+                emit(ResultState.Success(isSuccess))
+            } catch (e: HttpException) {
+                val errorResponse = Mapping.getErrorApiResponse(e)
+                emit(ResultState.Error(errorResponse.message))
+            }
+
+        }
 
     companion object {
         @Volatile
