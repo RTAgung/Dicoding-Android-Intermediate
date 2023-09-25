@@ -93,5 +93,5 @@ dependencies {
 
     androidTestImplementation 'com.android.support.test.espresso:espresso-contrib:3.0.2' //RecyclerViewActions
     implementation 'androidx.test.espresso:espresso-idling-resource:3.4.0'
-
+    androidTestImplementation 'androidx.test.espresso:espresso-intents:3.4.0'//IntentsTestRule
 }
