@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.dicoding.myunlimitedquotes.adapter.LoadingStateAdapter
 import com.dicoding.myunlimitedquotes.adapter.QuoteListAdapter
 import com.dicoding.myunlimitedquotes.databinding.ActivityMainBinding
 
@@ -24,12 +25,24 @@ class MainActivity : AppCompatActivity() {
         getData()
     }
 
+//    private fun getData() {
+//        val adapter = QuoteListAdapter()
+//        binding.rvQuote.adapter = adapter
+//        mainViewModel.getQuote()
+//        mainViewModel.quote.observe(this) {
+//            adapter.submitList(it)
+//        }
+//    }
+
     private fun getData() {
         val adapter = QuoteListAdapter()
-        binding.rvQuote.adapter = adapter
-        mainViewModel.getQuote()
-        mainViewModel.quote.observe(this, {
-            adapter.submitList(it)
-        })
+        binding.rvQuote.adapter = adapter.withLoadStateFooter(
+            footer = LoadingStateAdapter {
+                adapter.retry()
+            }
+        )
+        mainViewModel.quote.observe(this) {
+            adapter.submitData(lifecycle, it)
+        }
     }
 }
