@@ -7,7 +7,8 @@ import com.example.submission2.data.AppRepository
 import com.example.submission2.di.AppInjection
 import com.example.submission2.ui.auth.AuthViewModel
 import com.example.submission2.ui.home.HomeViewModel
-import com.example.submission2.ui.home.create.AddStoryViewModel
+import com.example.submission2.ui.addstory.AddStoryViewModel
+import com.example.submission2.ui.maps.MapsViewModel
 import com.example.submission2.ui.welcome.WelcomeViewModel
 
 class ViewModelFactory private constructor(private val appRepository: AppRepository) :
@@ -22,6 +23,8 @@ class ViewModelFactory private constructor(private val appRepository: AppReposit
             return HomeViewModel(appRepository) as T
         } else if (modelClass.isAssignableFrom(AddStoryViewModel::class.java)) {
             return AddStoryViewModel(appRepository) as T
+        } else if (modelClass.isAssignableFrom(MapsViewModel::class.java)) {
+            return MapsViewModel(appRepository) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class: " + modelClass.name)
     }

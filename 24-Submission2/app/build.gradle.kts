@@ -3,6 +3,7 @@ plugins {
     id("org.jetbrains.kotlin.android")
     id("kotlin-parcelize")
     id("kotlin-kapt")
+    id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
 }
 
 android {
@@ -41,7 +42,7 @@ android {
 }
 
 dependencies {
-// Core
+    // Core
     val coreVersion: String by rootProject.extra
     val appcompatVersion: String by rootProject.extra
     val lifecycleVersion: String by rootProject.extra
@@ -99,4 +100,5 @@ dependencies {
     // Google Services Location
     val serviceLocationVersion: String by rootProject.extra
     implementation("com.google.android.gms:play-services-location:$serviceLocationVersion")
+    implementation("com.google.android.gms:play-services-maps:$serviceLocationVersion")
 }

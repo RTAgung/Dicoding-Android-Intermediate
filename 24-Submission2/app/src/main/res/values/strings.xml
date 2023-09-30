@@ -61,4 +61,6 @@
     <string name="from_city_location_text">From %1$s</string>
     <string name="content_desc_add_new_story">Add new story</string>
     <string name="upload_story_failed_message">Upload story failed</string>
+    <string name="map_text">Map</string>
+    <string name="map_filter_hint_message">Filter by city</string>
 </resources>

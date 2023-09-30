@@ -2,6 +2,7 @@
 plugins {
     id("com.android.application") version "8.1.0" apply false
     id("org.jetbrains.kotlin.android") version "1.8.0" apply false
+    id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin") version "2.0.1" apply false
 }
 
 // Core
@@ -38,4 +39,4 @@ val datastoreVersion by extra { "1.0.0" }
 val lottieVersion by extra { "3.4.0" }
 
 // Google Services Location
-val serviceLocationVersion by extra { "21.0.1" }
+val serviceLocationVersion by extra { "18.0.0" }

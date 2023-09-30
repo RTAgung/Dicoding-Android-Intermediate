@@ -1,4 +1,4 @@
-package com.example.submission2.ui.home.create
+package com.example.submission2.ui.addstory
 
 import android.Manifest
 import android.annotation.SuppressLint
@@ -236,7 +236,7 @@ class AddStoryFragment : Fragment() {
 
     private fun logoutProcess() {
         viewModel.clearUserSession()
-        findNavController().navigate(R.id.action_homeFragment_to_loginFragment)
+        findNavController().navigate(R.id.action_addStoryFragment_to_loginFragment)
     }
 
     private fun initViewModel() {

@@ -1,4 +1,4 @@
-package com.example.submission2.ui.home.create
+package com.example.submission2.ui.addstory
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

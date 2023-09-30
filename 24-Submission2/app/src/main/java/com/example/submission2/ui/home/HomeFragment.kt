@@ -21,6 +21,7 @@ import com.example.submission2.data.ResultState
 import com.example.submission2.databinding.FragmentHomeBinding
 import com.example.submission2.ui.ViewModelFactory
 import com.example.submission2.ui.adapter.StoryAdapter
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 
 
@@ -137,11 +138,29 @@ class HomeFragment : Fragment() {
 
             override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
                 when (menuItem.itemId) {
-                    R.id.menu_item_logout -> logoutProcess()
+                    R.id.menu_item_logout -> openLogoutDialog()
+                    R.id.menu_item_map -> moveToMap()
                 }
                 return true
             }
         }, viewLifecycleOwner, androidx.lifecycle.Lifecycle.State.RESUMED)
+    }
+
+    private fun moveToMap() {
+        findNavController().navigate(R.id.action_homeFragment_to_mapsFragment)
+    }
+
+    private fun openLogoutDialog() {
+        MaterialAlertDialogBuilder(requireActivity())
+            .setTitle("Are you sure to logout?")
+            .setNegativeButton("Stay") { dialog, _ ->
+                dialog.cancel()
+            }
+            .setPositiveButton("Logout") { dialog, _ ->
+                logoutProcess()
+                dialog.dismiss()
+            }
+            .show()
     }
 
     private fun initViewModel() {
