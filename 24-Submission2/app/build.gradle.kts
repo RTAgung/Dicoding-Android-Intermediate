@@ -101,4 +101,14 @@ dependencies {
     val serviceLocationVersion: String by rootProject.extra
     implementation("com.google.android.gms:play-services-location:$serviceLocationVersion")
     implementation("com.google.android.gms:play-services-maps:$serviceLocationVersion")
+
+    // Room Db
+    val roomVersion: String by rootProject.extra
+    implementation("androidx.room:room-ktx:$roomVersion")
+    kapt("androidx.room:room-compiler:$roomVersion")
+    implementation("androidx.room:room-paging:$roomVersion")
+
+    // Pagination
+    val pagingVersion: String by rootProject.extra
+    implementation("androidx.paging:paging-runtime-ktx:$pagingVersion")
 }

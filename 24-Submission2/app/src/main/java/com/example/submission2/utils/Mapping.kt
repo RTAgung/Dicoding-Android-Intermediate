@@ -52,8 +52,14 @@ object Mapping {
             .toRequestBody("application/json; charset=utf-8".toMediaType())
     }
 
-    fun createStoryQueryMap(): Map<String, String> = mapOf(
-        "location" to "1"
+    fun createStoryQueryMap(
+        page: Int = 1,
+        size: Int = 100,
+        location: Int = 0
+    ): Map<String, String> = mapOf(
+        "page" to page.toString(),
+        "size" to size.toString(),
+        "location" to location.toString()
     )
 
     fun loginResultResponseToUser(data: LoginResultResponse): User =

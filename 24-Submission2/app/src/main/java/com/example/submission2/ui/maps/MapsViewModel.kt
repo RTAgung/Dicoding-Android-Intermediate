@@ -24,4 +24,6 @@ class MapsViewModel(private val appRepository: AppRepository) : ViewModel() {
             appRepository.clearUserSession()
         }
     }
+
+    fun getStoryWithLocation() = appRepository.getStoryWithLocation(user!!.token)
 }

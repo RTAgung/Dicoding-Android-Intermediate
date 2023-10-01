@@ -40,3 +40,9 @@ val lottieVersion by extra { "3.4.0" }
 
 // Google Services Location
 val serviceLocationVersion by extra { "18.0.0" }
+
+// Room Db
+val roomVersion by extra { "2.5.2" }
+
+// Paging
+val pagingVersion by extra { "3.2.1" }

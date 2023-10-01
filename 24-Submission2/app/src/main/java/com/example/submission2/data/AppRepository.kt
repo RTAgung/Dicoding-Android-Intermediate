@@ -80,6 +80,23 @@ class AppRepository private constructor(
         }
     }
 
+    fun getStoryWithLocation(token: String): LiveData<ResultState<List<Story>>> = liveData {
+        emit(ResultState.Loading)
+        try {
+            val queryMap = Mapping.createStoryQueryMap(location = 1)
+            val dataResponse = apiService.story(Helper.generateToken(token), queryMap)
+            if (dataResponse.error == false) {
+                val listStory = Mapping.storyResponseToStory(dataResponse.listStory)
+                emit(ResultState.Success(listStory))
+            } else {
+                emit(ResultState.Error(dataResponse.message ?: ""))
+            }
+        } catch (e: HttpException) {
+            val errorResponse = Mapping.getErrorApiResponse(e)
+            emit(ResultState.Error(errorResponse.message))
+        }
+    }
+
     fun uploadImage(token: String, imageFile: File, desc: String, lat: Double?, lon: Double?) =
         liveData {
             emit(ResultState.Loading)
