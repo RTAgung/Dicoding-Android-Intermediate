@@ -1,8 +1,9 @@
 package com.example.submission2.utils
 
-import com.example.submission2.data.model.ApiResponse
+import com.example.submission2.data.source.remote.response.ErrorResponse
 import com.example.submission2.data.model.Story
 import com.example.submission2.data.model.User
+import com.example.submission2.data.source.local.entity.StoryEntity
 import com.example.submission2.data.source.remote.response.LoginResultResponse
 import com.example.submission2.data.source.remote.response.StoryResponse
 import com.google.gson.Gson
@@ -15,9 +16,9 @@ import retrofit2.HttpException
 import java.io.File
 
 object Mapping {
-    fun getErrorApiResponse(e: HttpException): ApiResponse {
+    fun getErrorApiResponse(e: HttpException): ErrorResponse {
         val errorBody = e.response()?.errorBody()?.string()
-        return Gson().fromJson(errorBody, ApiResponse::class.java)
+        return Gson().fromJson(errorBody, ErrorResponse::class.java)
     }
 
     fun createFileMultipartBody(imageFile: File): MultipartBody.Part {
@@ -80,6 +81,40 @@ object Mapping {
     fun storyResponseToStory(listStoryResponse: List<StoryResponse?>?): List<Story> =
         listStoryResponse?.map { storyResponse ->
             storyResponseToStory(storyResponse)
+        } ?: ArrayList()
+
+    fun storyResponseToStoryEntity(storyResponse: StoryResponse?): StoryEntity {
+        return StoryEntity(
+            id = storyResponse?.id ?: "",
+            name = storyResponse?.name,
+            description = storyResponse?.description,
+            photoUrl = storyResponse?.photoUrl,
+            createdAt = storyResponse?.createdAt,
+            lat = storyResponse?.lat,
+            lon = storyResponse?.lon,
+        )
+    }
+
+    fun storyResponseToStoryEntity(listStoryResponse: List<StoryResponse?>?): List<StoryEntity> =
+        listStoryResponse?.map { storyResponse ->
+            storyResponseToStoryEntity(storyResponse)
+        } ?: ArrayList()
+
+    fun storyEntityToStory(storyEntity: StoryEntity?): Story {
+        return Story(
+            id = storyEntity?.id ?: "",
+            name = storyEntity?.name ?: "",
+            description = storyEntity?.description ?: "",
+            photoUrl = storyEntity?.photoUrl ?: "",
+            createdAt = storyEntity?.createdAt ?: "",
+            lat = storyEntity?.lat ?: 0.0,
+            lon = storyEntity?.lon ?: 0.0,
+        )
+    }
+
+    fun storyEntityToStory(listStoryEntity: List<StoryEntity?>?): List<Story> =
+        listStoryEntity?.map { storyEntity ->
+            storyEntityToStory(storyEntity)
         } ?: ArrayList()
 
     fun createUploadMapRequestBody(

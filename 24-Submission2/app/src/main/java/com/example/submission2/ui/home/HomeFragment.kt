@@ -15,14 +15,12 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.example.submission2.R
-import com.example.submission2.data.ResultState
 import com.example.submission2.databinding.FragmentHomeBinding
 import com.example.submission2.ui.ViewModelFactory
+import com.example.submission2.ui.adapter.LoadingStateAdapter
 import com.example.submission2.ui.adapter.StoryAdapter
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.google.android.material.snackbar.Snackbar
 
 
 class HomeFragment : Fragment() {
@@ -69,44 +67,19 @@ class HomeFragment : Fragment() {
     private fun initAdapter() {
         storyAdapter = StoryAdapter()
         binding.rvStory.apply {
-            layoutManager = StaggeredGridLayoutManager(1, LinearLayoutManager.VERTICAL)
-            adapter = storyAdapter
+            layoutManager = LinearLayoutManager(requireActivity())
+            adapter = storyAdapter.withLoadStateFooter(
+                footer = LoadingStateAdapter {
+                    storyAdapter.retry()
+                }
+            )
         }
     }
 
     private fun setData() {
-        viewModel.getStory().observe(viewLifecycleOwner) { result ->
-            if (result != null) {
-                when (result) {
-                    is ResultState.Loading -> {
-                        showLoading(true)
-                    }
-
-                    is ResultState.Success -> {
-                        showLoading(false)
-                        val listStory = result.data
-                        if (listStory.isNotEmpty()) storyAdapter.submitList(listStory)
-                        else showSnackbar(getString(R.string.no_available_data_message))
-                    }
-
-                    is ResultState.Error -> {
-                        showLoading(false)
-                        showSnackbar(result.error)
-                    }
-                }
-            }
+        viewModel.getStory().observe(viewLifecycleOwner) {
+            storyAdapter.submitData(lifecycle, it)
         }
-    }
-
-    private fun showLoading(isLoading: Boolean) {
-        if (isLoading)
-            binding.incLoading.loading.visibility = View.VISIBLE
-        else
-            binding.incLoading.loading.visibility = View.GONE
-    }
-
-    private fun showSnackbar(message: String) {
-        Snackbar.make(binding.root, message, Snackbar.LENGTH_LONG).show()
     }
 
     private fun checkSession() {
@@ -152,11 +125,11 @@ class HomeFragment : Fragment() {
 
     private fun openLogoutDialog() {
         MaterialAlertDialogBuilder(requireActivity())
-            .setTitle("Are you sure to logout?")
-            .setNegativeButton("Stay") { dialog, _ ->
+            .setTitle(getString(R.string.confirmation_logout_message))
+            .setNegativeButton(getString(R.string.stay)) { dialog, _ ->
                 dialog.cancel()
             }
-            .setPositiveButton("Logout") { dialog, _ ->
+            .setPositiveButton(getString(R.string.logout)) { dialog, _ ->
                 logoutProcess()
                 dialog.dismiss()
             }

@@ -16,6 +16,9 @@ val fragmentVersion by extra { "1.6.1" }
 val junitVersion by extra { "4.13.2" }
 val extVersion by extra { "1.1.5" }
 val espressoVersion by extra { "3.5.1" }
+val coreTestingVersion by extra { "2.1.0" }
+val coroutinesTestVersion by extra { "1.6.1" }
+val mockitoVersion by extra { "3.12.4" }
 
 // UI
 val recyclerviewVersion by extra { "1.3.1" }

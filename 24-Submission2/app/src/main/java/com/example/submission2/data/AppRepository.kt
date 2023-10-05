@@ -3,16 +3,24 @@ package com.example.submission2.data
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.liveData
+import androidx.paging.ExperimentalPagingApi
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
+import androidx.paging.map
 import com.example.submission2.data.model.Story
 import com.example.submission2.data.model.User
+import com.example.submission2.data.source.local.database.DbConfig
 import com.example.submission2.data.source.preferences.AppPreferences
 import com.example.submission2.data.source.remote.service.ApiService
 import com.example.submission2.utils.Helper
 import com.example.submission2.utils.Mapping
+import kotlinx.coroutines.flow.map
 import retrofit2.HttpException
 import java.io.File
 
 class AppRepository private constructor(
+    private val database: DbConfig,
     private val apiService: ApiService,
     private val appPreferences: AppPreferences
 ) {
@@ -63,21 +71,22 @@ class AppRepository private constructor(
         appPreferences.clearUserSession()
     }
 
-    fun getStory(token: String): LiveData<ResultState<List<Story>>> = liveData {
-        emit(ResultState.Loading)
-        try {
-            val queryMap = Mapping.createStoryQueryMap()
-            val dataResponse = apiService.story(Helper.generateToken(token), queryMap)
-            if (dataResponse.error == false) {
-                val listStory = Mapping.storyResponseToStory(dataResponse.listStory)
-                emit(ResultState.Success(listStory))
-            } else {
-                emit(ResultState.Error(dataResponse.message ?: ""))
+    fun getStory(token: String): LiveData<PagingData<Story>> {
+        @OptIn(ExperimentalPagingApi::class)
+        val liveData = Pager(
+            config = PagingConfig(
+                pageSize = 5
+            ),
+            remoteMediator = StoryRemoteMediator(database, apiService, token),
+            pagingSourceFactory = {
+                database.storyDao().getAllStory()
             }
-        } catch (e: HttpException) {
-            val errorResponse = Mapping.getErrorApiResponse(e)
-            emit(ResultState.Error(errorResponse.message))
-        }
+        ).flow.map { pagingData ->
+            pagingData.map {
+                Mapping.storyEntityToStory(it)
+            }
+        }.asLiveData()
+        return liveData
     }
 
     fun getStoryWithLocation(token: String): LiveData<ResultState<List<Story>>> = liveData {
@@ -120,9 +129,9 @@ class AppRepository private constructor(
         private var instance: AppRepository? = null
 
         fun getInstance(
-            apiService: ApiService, appPreferences: AppPreferences
+            database: DbConfig, apiService: ApiService, appPreferences: AppPreferences
         ): AppRepository = instance ?: synchronized(this) {
-            instance ?: AppRepository(apiService, appPreferences)
+            instance ?: AppRepository(database, apiService, appPreferences)
         }.also { instance = it }
     }
 }

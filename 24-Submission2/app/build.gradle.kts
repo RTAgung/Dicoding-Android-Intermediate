@@ -35,10 +35,15 @@ android {
     }
     kotlinOptions {
         jvmTarget = "17"
+        freeCompilerArgs += listOf("-Xopt-in=kotlin.RequiresOptIn")
     }
     viewBinding {
         enable = true
     }
+    testOptions {
+        unitTests.isReturnDefaultValues = true
+    }
+
 }
 
 dependencies {
@@ -59,9 +64,18 @@ dependencies {
     val junitVersion: String by rootProject.extra
     val extVersion: String by rootProject.extra
     val espressoVersion: String by rootProject.extra
+    val coreTestingVersion: String by rootProject.extra
+    val coroutinesTestVersion: String by rootProject.extra
+    val mockitoVersion: String by rootProject.extra
     testImplementation("junit:junit:$junitVersion")
+    testImplementation("androidx.arch.core:core-testing:$coreTestingVersion") // InstantTaskExecutorRule
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutinesTestVersion") //TestDispatcher
+    testImplementation("org.mockito:mockito-core:$mockitoVersion")
+    testImplementation("org.mockito:mockito-inline:$mockitoVersion")
+    androidTestImplementation("junit:junit:$junitVersion")
     androidTestImplementation("androidx.test.ext:junit:$extVersion")
     androidTestImplementation("androidx.test.espresso:espresso-core:$espressoVersion")
+    androidTestImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutinesTestVersion") //TestDispatcher
 
     // UI
     val recyclerviewVersion: String by rootProject.extra

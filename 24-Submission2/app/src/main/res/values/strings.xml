@@ -63,4 +63,8 @@
     <string name="upload_story_failed_message">Upload story failed</string>
     <string name="map_text">Map</string>
     <string name="map_filter_hint_message">Filter by city</string>
+    <string name="retry">Retry</string>
+    <string name="confirmation_logout_message">Are you sure to logout?</string>
+    <string name="stay">Stay</string>
+    <string name="logout">Logout</string>
 </resources>

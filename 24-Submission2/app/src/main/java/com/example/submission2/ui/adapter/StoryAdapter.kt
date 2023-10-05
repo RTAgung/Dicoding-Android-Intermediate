@@ -3,8 +3,8 @@ package com.example.submission2.ui.adapter
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.submission2.R
 import com.example.submission2.data.model.Story
@@ -13,7 +13,7 @@ import com.example.submission2.utils.GlideApp
 import com.example.submission2.utils.Helper
 
 class StoryAdapter :
-    ListAdapter<Story, StoryAdapter.ViewHolder>(DIFF_CALLBACK) {
+    PagingDataAdapter<Story, StoryAdapter.ViewHolder>(DIFF_CALLBACK) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding =
             StoryItemLayoutBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -22,7 +22,9 @@ class StoryAdapter :
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val storyItem = getItem(position)
-        holder.bind(storyItem)
+        if (storyItem != null) {
+            holder.bind(storyItem)
+        }
     }
 
     class ViewHolder(private var binding: StoryItemLayoutBinding) :

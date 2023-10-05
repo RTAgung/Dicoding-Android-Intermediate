@@ -1,8 +1,8 @@
-package com.example.submission2.data.model
+package com.example.submission2.data.source.remote.response
 
 import com.google.gson.annotations.SerializedName
 
-data class ApiResponse(
+data class ErrorResponse(
     @field:SerializedName("error")
     val error: Boolean,
     @field:SerializedName("message")
