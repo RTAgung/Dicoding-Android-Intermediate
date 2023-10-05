@@ -3,7 +3,6 @@ package com.example.submission2.ui.addstory
 import android.Manifest
 import android.annotation.SuppressLint
 import android.content.pm.PackageManager
-import android.location.Location
 import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -28,6 +27,7 @@ import com.example.submission2.databinding.FragmentAddStoryBinding
 import com.example.submission2.ui.ViewModelFactory
 import com.example.submission2.utils.Helper
 import com.google.android.gms.location.LocationServices
+import com.google.android.gms.maps.model.LatLng
 import com.google.android.material.snackbar.Snackbar
 
 class AddStoryFragment : Fragment() {
@@ -54,31 +54,30 @@ class AddStoryFragment : Fragment() {
         viewModel.isReadyToLoadData.observe(viewLifecycleOwner) { isReady ->
             if (isReady) {
                 setAppBar()
-                setLocation()
                 setView()
             }
         }
     }
 
     @SuppressLint("MissingPermission")
-    private fun setLocation() {
+    private fun getLocation() {
         val mFusedLocationClient =
             LocationServices.getFusedLocationProviderClient(requireActivity())
+
         if (Helper.Location.checkPermissions(requireActivity())) {
             if (Helper.Location.isLocationEnabled(requireActivity())) {
-                mFusedLocationClient.lastLocation.addOnCompleteListener(requireActivity()) { task ->
-                    val location: Location? = task.result
+                mFusedLocationClient.lastLocation.addOnSuccessListener { location ->
                     if (location != null) {
-                        viewModel.lat = location.latitude
-                        viewModel.lon = location.longitude
+                        viewModel.location = LatLng(location.latitude, location.longitude)
                         Helper.Location.generateLocation(
                             requireActivity(),
-                            location.latitude,
-                            location.longitude
+                            viewModel.location!!
                         ) { cityName ->
                             binding.tvStoryLocation.text =
                                 getString(R.string.from_city_location_text, cityName)
                         }
+                    } else {
+                        showSnackbar(getString(R.string.location_not_found))
                     }
                 }
             } else {
@@ -91,19 +90,33 @@ class AddStoryFragment : Fragment() {
 
     private val requestLocationPermissionLauncher =
         registerForActivityResult(
-            ActivityResultContracts.RequestPermission()
-        ) { isGranted: Boolean ->
-            if (isGranted) {
-                showSnackbar(getString(R.string.permission_granted))
-                setLocation()
-            } else {
-                showSnackbar(getString(R.string.permission_denied))
+            ActivityResultContracts.RequestMultiplePermissions()
+        ) { permissions ->
+            when {
+                permissions[Manifest.permission.ACCESS_FINE_LOCATION] ?: false -> {
+                    showSnackbar(getString(R.string.permission_granted))
+                    getLocation()
+                }
+
+                permissions[Manifest.permission.ACCESS_COARSE_LOCATION] ?: false -> {
+                    showSnackbar(getString(R.string.permission_granted))
+                    getLocation()
+                }
+
+                else -> {
+                    showSnackbar(getString(R.string.permission_denied))
+                }
             }
         }
 
+
     private fun requestLocationPermissions() {
-        requestLocationPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
-        requestLocationPermissionLauncher.launch(Manifest.permission.ACCESS_COARSE_LOCATION)
+        requestLocationPermissionLauncher.launch(
+            arrayOf(
+                Manifest.permission.ACCESS_FINE_LOCATION,
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            )
+        )
     }
 
     private fun setView() {
@@ -114,6 +127,14 @@ class AddStoryFragment : Fragment() {
         binding.btnOpenCamera.setOnClickListener { openCamera() }
         binding.btnOpenGallery.setOnClickListener { openGallery() }
         binding.btnUpload.setOnClickListener { uploadProcess() }
+        binding.switchLocation.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked)
+                getLocation()
+            else {
+                viewModel.location = null
+                binding.tvStoryLocation.text = ""
+            }
+        }
     }
 
     private fun uploadProcess() {

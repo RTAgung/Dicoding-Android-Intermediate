@@ -6,13 +6,13 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.submission2.data.AppRepository
 import com.example.submission2.data.model.User
+import com.google.android.gms.maps.model.LatLng
 import kotlinx.coroutines.launch
 import java.io.File
 
 class AddStoryViewModel(private val appRepository: AppRepository) : ViewModel() {
     var user: User? = null
-    var lat: Double? = null
-    var lon: Double? = null
+    var location: LatLng? = null
 
     private val _isReadyToLoadData = MutableLiveData<Boolean>()
     val isReadyToLoadData: LiveData<Boolean> = _isReadyToLoadData
@@ -29,5 +29,5 @@ class AddStoryViewModel(private val appRepository: AppRepository) : ViewModel() 
     }
 
     fun uploadImage(imageFile: File, desc: String) =
-        appRepository.uploadImage(user!!.token, imageFile, desc, lat, lon)
+        appRepository.uploadImage(user!!.token, imageFile, desc, location)
 }

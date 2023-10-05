@@ -1,11 +1,12 @@
 package com.example.submission2.utils
 
-import com.example.submission2.data.source.remote.response.ErrorResponse
 import com.example.submission2.data.model.Story
 import com.example.submission2.data.model.User
 import com.example.submission2.data.source.local.entity.StoryEntity
+import com.example.submission2.data.source.remote.response.ErrorResponse
 import com.example.submission2.data.source.remote.response.LoginResultResponse
 import com.example.submission2.data.source.remote.response.StoryResponse
+import com.google.android.gms.maps.model.LatLng
 import com.google.gson.Gson
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MultipartBody
@@ -119,13 +120,14 @@ object Mapping {
 
     fun createUploadMapRequestBody(
         desc: String,
-        lat: Double?,
-        lon: Double?
+        location: LatLng?
     ): Map<String, RequestBody> {
         val descRequestBody = desc.toRequestBody("text/plain".toMediaType())
-        return if (lat != null && lon != null) {
-            val latRequestBody = lat.toString().toRequestBody("text/plain".toMediaType())
-            val lonRequestBody = lon.toString().toRequestBody("text/plain".toMediaType())
+        return if (location != null) {
+            val latRequestBody =
+                location.latitude.toString().toRequestBody("text/plain".toMediaType())
+            val lonRequestBody =
+                location.longitude.toString().toRequestBody("text/plain".toMediaType())
             mapOf(
                 "description" to descRequestBody,
                 "lat" to latRequestBody,

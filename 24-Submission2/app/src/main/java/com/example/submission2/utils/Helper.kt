@@ -18,11 +18,15 @@ import androidx.core.content.FileProvider
 import androidx.exifinterface.media.ExifInterface
 import com.airbnb.lottie.BuildConfig
 import com.example.submission2.R
+import com.google.android.gms.maps.model.LatLng
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileOutputStream
 import java.io.InputStream
 import java.text.SimpleDateFormat
+import java.time.OffsetDateTime
+import java.time.ZoneId
+import java.time.ZoneOffset
 import java.util.Date
 import java.util.Locale
 
@@ -39,12 +43,17 @@ object Helper {
     fun generateToken(token: String): String = "Bearer $token"
 
     private fun generateDiffTime(stringDate: String): ArrayList<Pair<String, Long>> {
-        val currentDate = Date()
+        val offset = ZoneOffset.ofHours(0)
+        val odt = OffsetDateTime.now(offset)
+        val ldt = odt.toLocalDateTime()
+        val currentDate = Date.from(ldt.atZone(ZoneId.systemDefault()).toInstant())
         val dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
         val oldDate = SimpleDateFormat(dateFormat, Locale.getDefault()).parse(stringDate)
+
         val currentTime = currentDate.time
         val oldTime = oldDate?.time
         val diffTime = currentTime - oldTime!!
+
         val seconds = diffTime / 1000
         val minutes = seconds / 60
         val hours = minutes / 60
@@ -211,10 +220,10 @@ object Helper {
     }
 
     object Location {
-        fun generateLocation(context: Context, lat: Double, long: Double, city: (String) -> Unit) {
+        fun generateLocation(context: Context, location: LatLng, city: (String) -> Unit) {
             var cityName: String?
             Geocoder(context, Locale.getDefault())
-                .getAddress(lat, long) { address: android.location.Address? ->
+                .getAddress(location) { address: android.location.Address? ->
                     if (address != null) {
                         cityName = getCityFromAddressLine(address.getAddressLine(0))
                         city(cityName ?: "city")
@@ -252,10 +261,11 @@ object Helper {
         }
 
         private fun Geocoder.getAddress(
-            latitude: Double,
-            longitude: Double,
+            location: LatLng,
             address: (android.location.Address?) -> Unit
         ) {
+            val latitude = location.latitude
+            val longitude = location.longitude
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                 getFromLocation(latitude, longitude, 1) { address(it.firstOrNull()) }
             } else {

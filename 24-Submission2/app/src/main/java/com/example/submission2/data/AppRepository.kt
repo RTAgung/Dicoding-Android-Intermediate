@@ -15,6 +15,7 @@ import com.example.submission2.data.source.preferences.AppPreferences
 import com.example.submission2.data.source.remote.service.ApiService
 import com.example.submission2.utils.Helper
 import com.example.submission2.utils.Mapping
+import com.google.android.gms.maps.model.LatLng
 import kotlinx.coroutines.flow.map
 import retrofit2.HttpException
 import java.io.File
@@ -106,14 +107,14 @@ class AppRepository private constructor(
         }
     }
 
-    fun uploadImage(token: String, imageFile: File, desc: String, lat: Double?, lon: Double?) =
+    fun uploadImage(token: String, imageFile: File, desc: String, location: LatLng?) =
         liveData {
             emit(ResultState.Loading)
             try {
                 val dataResponse = apiService.story(
                     Helper.generateToken(token),
                     Mapping.createFileMultipartBody(imageFile),
-                    Mapping.createUploadMapRequestBody(desc, lat, lon)
+                    Mapping.createUploadMapRequestBody(desc, location)
                 )
                 val isSuccess = !(dataResponse.error ?: true)
                 emit(ResultState.Success(isSuccess))

@@ -67,4 +67,6 @@
     <string name="confirmation_logout_message">Are you sure to logout?</string>
     <string name="stay">Stay</string>
     <string name="logout">Logout</string>
+    <string name="share_location">Share Location</string>
+    <string name="location_not_found">Location is not found. Try Again</string>
 </resources>

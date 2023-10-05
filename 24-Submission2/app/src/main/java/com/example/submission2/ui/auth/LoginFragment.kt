@@ -3,6 +3,8 @@ package com.example.submission2.ui.auth
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -80,7 +82,9 @@ class LoginFragment : Fragment() {
                         val user = result.data
                         if (user != null) {
                             viewModel.saveUserSession(user)
-                            findNavController().navigate(R.id.action_loginFragment_to_homeFragment)
+                            Handler(Looper.getMainLooper()).postDelayed({
+                                findNavController().navigate(R.id.action_loginFragment_to_homeFragment)
+                            }, 500)
                         } else {
                             showLoading(false)
                             showSnackbar(getString(R.string.login_failed_message))

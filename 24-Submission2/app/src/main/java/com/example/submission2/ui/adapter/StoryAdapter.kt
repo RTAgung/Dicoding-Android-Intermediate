@@ -11,6 +11,7 @@ import com.example.submission2.data.model.Story
 import com.example.submission2.databinding.StoryItemLayoutBinding
 import com.example.submission2.utils.GlideApp
 import com.example.submission2.utils.Helper
+import com.google.android.gms.maps.model.LatLng
 
 class StoryAdapter :
     PagingDataAdapter<Story, StoryAdapter.ViewHolder>(DIFF_CALLBACK) {
@@ -45,8 +46,7 @@ class StoryAdapter :
                     Helper.generateExactDiffTime(itemView.context, storyItem.createdAt)
                 Helper.Location.generateLocation(
                     itemView.context,
-                    storyItem.lat,
-                    storyItem.lon
+                    LatLng(storyItem.lat, storyItem.lon)
                 ) { cityName ->
                     tvStoryLocation.text = cityName
                 }
